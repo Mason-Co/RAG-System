@@ -1,16 +1,16 @@
 # Mason Colacicco
-# File to take documents
+# File to locate and load documents
 
 import os
 # Does not change code functionality, but helps understand code
 from typing import List
 
 class DocumentLoader:
-    # Defines what each document object will contain
+    # Receives a string defining the document path
     def __init__(self, documents_path: str):
         self.documents_path = documents_path
 
-# Reflects back to List import to show that this returns a list of strings
+    # Reflects back to List import to show that this returns a list of strings
     def load_documents(self) -> List[str]:
         # Creates an empty list that contains the text of each document
         documents = []

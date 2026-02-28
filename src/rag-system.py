@@ -1,17 +1,22 @@
+# Mason Colacicco
+# File
+
 import os
 from dotenv import load_dotenv
 import openai
 
-from doc_loader import DocumentLoader
-from text_processor import TextProcessor
-from embeddings_manager import EmbeddingsManager
-from retrieval_system import RetrievalSystem
+# Import other RAG files
+from .doc_loader import DocumentLoader
+from .text_processor import TextProcessor
+from .embeddings_manager import EmbeddingsManager
+from .retrieval_system import RetrievalSystem
 
 class RAGSystem:
     def __init__(self):
+        # Load .env file and retrieve the OpenAI API Key
         load_dotenv()
         self.api_key = os.getenv('OPENAI_API_KEY')
-        self.loader = DocumentLoader('data/documents')
+        self.loader = DocumentLoader('../data/documents')
         self.processor = TextProcessor()
         self.embeddings_manager = EmbeddingsManager(self.api_key)
 
