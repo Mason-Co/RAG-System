@@ -16,7 +16,7 @@ class RAGSystem:
         # Load .env file and retrieve the OpenAI API Key
         load_dotenv()
         self.api_key = os.getenv('OPENAI_API_KEY')
-        self.loader = DocumentLoader('../data/documents')
+        self.loader = DocumentLoader('data/documents')
         self.processor = TextProcessor()
         self.embeddings_manager = EmbeddingsManager(self.api_key)
 

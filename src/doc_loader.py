@@ -20,7 +20,7 @@ class DocumentLoader:
             if filename.endswith('.txt'):
                 # Open and read the file
                 # It creates a file path, opens in read mode, and then closes the document when completed
-                with open(os.path.join(self.documents_path, filename), 'r') as file:
+                with open(os.path.join(self.documents_path, filename), 'r', encoding='utf-8', errors='replace') as file:
                     # Reads the whole file into a string and adds it to the list
                     documents.append(file.read())
         # Returns the list of documents as the value of the method.
