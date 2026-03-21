@@ -19,17 +19,12 @@ class EmbeddingsManager:
         # Loop through each chunk
         for text in texts:
             # Input one list to OpenAI model and receive a vector
-            # REPLACING THIS AREA TEMPORARILY FOR TESTING
-            #response = openai.embeddings.create(
-                #model="text-embedding-ada-002",
-                #input=text
-            #)
+            response = openai.embeddings.create(
+                model="text-embedding-3-small",
+                input=text
+            )
 
             # Put the new array into the list
-            #embeddings.append(np.array(response.data[0].embedding))
-
-            # THIS IS THE REPLACEMENT CODE FOR TESTING
-            embedding = np.random.rand(1536)
-            embeddings.append(embedding)
+            embeddings.append(np.array(response.data[0].embedding))
 
         return embeddings

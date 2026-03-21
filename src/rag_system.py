@@ -48,17 +48,15 @@ class RAGSystem:
 
         # Create prompt
         # REPLACING THIS AREA TEMPORARILY FOR TESTING
-        #prompt = f"""Context: {context}\n\nQuestion: {question}\n\nAnswer:"""
+        prompt = f"""Context: {context}\n\nQuestion: {question}\n\nAnswer:"""
 
         # Get response from OpenAI
-        #response = openai.chat.completions.create(
-            #model="gpt-4-turbo-preview",
-            #messages=[
-                #{"role": "system", "content": "You are a helpful assistant. Use the provided context to answer the question."},
-                #{"role": "user", "content": prompt}
-            #]
-        #)
+        response = openai.chat.completions.create(
+            model="gpt-4-turbo-preview",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant. Use the provided context to answer the question."},
+                {"role": "user", "content": prompt}
+            ]
+        )
 
-        #return response.choices[0].message.content
-        # THIS IS THE REPLACEMENT CODE FOR TESTING
-        return f"Retrieved context:\n\n{context}"
+        return response.choices[0].message.content
