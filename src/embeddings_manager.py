@@ -10,8 +10,11 @@ import numpy as np
 
 class EmbeddingsManager:
     # Sets a global API key for any OpenAI calls
-    def __init__(self, api_key: str):
+    def __init__(self, api_type, api_key, api_base, api_version):
         openai.api_key = api_key
+        openai.api_type = api_type
+        openai.api_base = api_base
+        openai.api_version = api_version
 
     # Take a list of chunks and returned a list of vectors
     def create_embeddings(self, texts: List[str]) -> List[np.ndarray]:

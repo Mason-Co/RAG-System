@@ -4,6 +4,6 @@ from src.rag_system import RAGSystem
 rag = RAGSystem()
 
 # Ask a question
-question = "Who coined the term Artificial Intelligence and at what event?"
+question = input("What would you like to know about the evolution of AI?\n")
 answer = rag.answer_question(question)
 print(answer)

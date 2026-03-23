@@ -15,10 +15,14 @@ class RAGSystem:
     def __init__(self):
         # Load .env file and retrieve the OpenAI API Key
         load_dotenv()
-        self.api_key = os.getenv('OPENAI_API_KEY')
+        self.api_type = "azure"
+        self.api_key = os.getenv('AZURE_OPENAI_KEY')
+        self.api_base = os.getenv('AZURE_OPENAI_ENDPOINT')
+        self.api_version = "2023-07-01-preview"
+
         self.loader = DocumentLoader('data/documents')
         self.processor = TextProcessor()
-        self.embeddings_manager = EmbeddingsManager(self.api_key)
+        self.embeddings_manager = EmbeddingsManager(self.api_type, self.api_key, self.api_base, self.api_version)
 
         # Initialize system
         self.initialize_system()
@@ -52,9 +56,16 @@ class RAGSystem:
 
         # Get response from OpenAI
         response = openai.chat.completions.create(
-            model="gpt-4-turbo-preview",
+            model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant. Use the provided context to answer the question."},
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a helpful RAG assistant. Answer the question using only the provided context. "
+                        "If the context is insufficient, say that clearly and suggest what information is missing. "
+                        "Keep the answer concise and directly relevant to the question."
+                    ),
+                },
                 {"role": "user", "content": prompt}
             ]
         )
