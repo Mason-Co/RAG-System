@@ -19,7 +19,7 @@ class EmbeddingsManager:
     # Take a list of chunks and returned a list of vectors
     def create_embeddings(self, texts: List[str]) -> List[np.ndarray]:
         # Input one list to OpenAI model and receive a vector
-        response = openai.Embedding.create(
+        response = openai.embeddings.create(
             model="text-embedding-3-small",
             input=texts
         )
