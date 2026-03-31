@@ -18,16 +18,16 @@ class EmbeddingsManager:
 
     # Take a list of chunks and returned a list of vectors
     def create_embeddings(self, texts: List[str]) -> List[np.ndarray]:
-        embeddings = []
-        # Loop through each chunk
-        for text in texts:
-            # Input one list to OpenAI model and receive a vector
-            response = openai.embeddings.create(
-                model="text-embedding-3-small",
-                input=text
-            )
+        # Input one list to OpenAI model and receive a vector
+        response = openai.Embedding.create(
+            model="text-embedding-3-small",
+            input=texts
+        )
 
-            # Put the new array into the list
-            embeddings.append(np.array(response.data[0].embedding))
+        # Put the new array into the list
+        embeddings = [
+            np.array(item.embedding)
+            for item in response.data
+        ]
 
         return embeddings
