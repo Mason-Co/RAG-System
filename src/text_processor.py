@@ -6,7 +6,7 @@ from typing import List
 
 class TextProcessor:
     # Sets a max size for the chunks
-    def __init__(self, chunk_size: int = 1000):
+    def __init__(self, chunk_size: int = 800):
         self.chunk_size = chunk_size
 
     # Splits the long string of provided text into chunks
