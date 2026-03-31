@@ -30,12 +30,19 @@ class RAGSystem:
     def initialize_system(self):
         # Load and process documents
         documents = self.loader.load_documents()
-        self.chunks = []
+        self.chunks = []  # list[dict]
         for doc in documents:
-            self.chunks.extend(self.processor.split_into_chunks(doc))
+            chunk_texts = self.processor.split_into_chunks(documents[doc])
+            for i, chunk_text in enumerate(chunk_texts):
+                self.chunks.append({
+                    "text": chunk_text,
+                    "source": doc,
+                    "chunk_id": i
+                })
 
         # Create embeddings
-        self.embeddings = self.embeddings_manager.create_embeddings(self.chunks)
+        chunk_texts_for_embedding = [c["text"] for c in self.chunks]
+        self.embeddings = self.embeddings_manager.create_embeddings(chunk_texts_for_embedding)
 
         # Initialize retrieval system
         self.retrieval_system = RetrievalSystem(self.chunks, self.embeddings)
@@ -48,10 +55,12 @@ class RAGSystem:
         relevant_chunks = self.retrieval_system.find_similar_chunks(question_embedding)
 
         # Prepare context
-        context = "\n".join([chunk[0] for chunk in relevant_chunks])
+        context = "\n\n".join([
+            f"[Source: {item[0]['source']}] {item[0]['text']}"
+            for item in relevant_chunks
+        ])
 
         # Create prompt
-        # REPLACING THIS AREA TEMPORARILY FOR TESTING
         prompt = f"""Context: {context}\n\nQuestion: {question}\n\nAnswer:"""
 
         # Get response from OpenAI
@@ -70,4 +79,17 @@ class RAGSystem:
             ]
         )
 
-        return response.choices[0].message.content
+        return f"{response.choices[0].message.content}\n\nContext is provided below:\n{context}"
+
+if __name__ == "__main__":
+    loader = DocumentLoader('../data/documents')
+    processor = TextProcessor()
+    documents = loader.load_documents()
+    chunks = {}
+    for doc in documents:
+        chunks[doc] = processor.split_into_chunks(documents[doc])
+
+    for chunk in chunks:
+        print('\n', chunk)
+        for section in chunks[chunk]:
+            print(f'\n\nNEW CHUNK STARTING NOW \n\n{section}')

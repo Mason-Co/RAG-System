@@ -8,12 +8,12 @@ from typing import List, Tuple
 
 class RetrievalSystem:
     # Creates a connection between the chunks and embeddings that were created from each chunk
-    def __init__(self, chunks: List[str], embeddings: List[np.ndarray]):
+    def __init__(self, chunks: List[dict], embeddings: List[np.ndarray]):
         self.chunks = chunks
         self.embeddings = embeddings
 
     # Input user query vector and how many results to return
-    def find_similar_chunks(self, query_embedding: np.ndarray, top_k: int = 3) -> List[Tuple[str, float]]:
+    def find_similar_chunks(self, query_embedding: np.ndarray, top_k: int = 3) -> List[Tuple[dict, float]]:
         similarities = []
         # Loop through embeddings and each index for each vector
         for i, embedding in enumerate(self.embeddings):
