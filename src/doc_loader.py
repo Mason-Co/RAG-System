@@ -28,6 +28,9 @@ class DocumentLoader:
         # Returns the list of documents as the value of the method.
         return doc_dict
 
+    def list_document_names(self):
+        return [f for f in os.listdir(self.documents_path) if f.endswith(".txt")]
+
 if __name__ == '__main__':
     loader = DocumentLoader('../data/documents')
     loaded_documents = loader.load_documents()
