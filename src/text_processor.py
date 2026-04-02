@@ -6,8 +6,9 @@ from typing import List
 
 class TextProcessor:
     # Sets a max size for the chunks
-    def __init__(self, chunk_size: int = 800):
+    def __init__(self, chunk_size: int = 500, chunk_overlap: int = 100):
         self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap
 
     # Splits the long string of provided text into chunks
     def split_into_chunks(self, text: str) -> List[str]:
@@ -15,25 +16,16 @@ class TextProcessor:
         words = text.split()
         # Create a list of chunks
         chunks = []
-        current_chunk = []
-        current_size = 0
+        # stride = 800 chunk - 200 overlap.
+        # Overlap causes first 200 overlap with previous chunk, and last 200 overlap with the following chunk
+        stride = self.chunk_size - self.chunk_overlap
 
-        for word in words:
-            # Check if the chunk will be too large if the word is added
-            if current_size + len(word) > self.chunk_size:
-                # List of words back into string separated by a space and add it to the chunk list
-                chunks.append(' '.join(current_chunk))
-                # Create a new chunk with the current word and word size
-                current_chunk = [word]
-                current_size = len(word)
-            else:
-                # Add the current word to the current chunk
-                current_chunk.append(word)
-                # The extra addition to size is to include the spaces
-                current_size += len(word) + 1
-
-        # Save the final chunk to the list
-        if current_chunk:
-            chunks.append(' '.join(current_chunk))
+        for start in range(0, len(text), stride):
+            chunk = text[start:start + self.chunk_size]
+            if not chunk:
+                break
+            chunks.append(chunk)
+            if start + self.chunk_size >= len(text):
+                break
 
         return chunks
