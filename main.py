@@ -4,6 +4,9 @@ from src.rag_system import RAGSystem
 rag = RAGSystem()
 
 # Ask a question
-question = input("What would you like to know about the evolution of AI?\n")
-answer = rag.answer_question(question)
-print(answer)
+while True:
+    question = input("\nWhat would you like to know about the document(s)?\nNote: Enter 'quit' to exit. \n")
+    if question.lower() == "quit":
+        break
+    answer = rag.answer_question(question)
+    print(answer)
