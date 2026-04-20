@@ -6,7 +6,7 @@ from typing import List
 
 class TextProcessor:
     # Sets a max size for the chunks
-    def __init__(self, chunk_size: int = 500, chunk_overlap: int = 100):
+    def __init__(self, chunk_size: int = 650, chunk_overlap: int = 150):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
 
@@ -21,10 +21,14 @@ class TextProcessor:
         stride = self.chunk_size - self.chunk_overlap
 
         for start in range(0, len(text), stride):
+            # Create each chunk while keeping the overlap due to the for loop jumping by stride
             chunk = text[start:start + self.chunk_size]
+            # Breaks if there is an empty string
             if not chunk:
                 break
+            # Add the chunk to the list of chunks
             chunks.append(chunk)
+            # Ends if the chunk has reached the end of the text
             if start + self.chunk_size >= len(text):
                 break
 
