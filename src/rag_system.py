@@ -1,5 +1,5 @@
 # Mason Colacicco
-# File
+# File to merge all other RAG system files and initialize the system
 
 import os
 from dotenv import load_dotenv
@@ -23,22 +23,43 @@ class RAGSystem:
         self.loader = DocumentLoader('data/documents')
         self.processor = TextProcessor()
         self.embeddings_manager = EmbeddingsManager(self.api_type, self.api_key, self.api_base, self.api_version)
+        self.chunks = []
+        self.embeddings = []
+        self.retrieval_system = None
 
         # Initialize system
         self.initialize_system()
 
-    def initialize_system(self):
+    def initialize_system(self, selected_doc_names: list[str] | None = None):
+        # Start with no indexed documents unless the caller provides a selection.
+        if not selected_doc_names:
+            self.chunks = []
+            self.embeddings = []
+            self.retrieval_system = None
+            return
+
+        self.build_index(selected_doc_names)
+
+    def build_index(self, selected_doc_names: list[str]):
         # Load and process documents
         documents = self.loader.load_documents()
-        self.chunks = []  # list[dict]
-        for doc in documents:
-            chunk_texts = self.processor.split_into_chunks(documents[doc])
+        selected = set(selected_doc_names)
+
+        self.chunks = []
+        for doc_name, doc_text in documents.items():
+            if doc_name not in selected:
+                continue
+            chunk_texts = self.processor.split_into_chunks(doc_text)
             for i, chunk_text in enumerate(chunk_texts):
                 self.chunks.append({
                     "text": chunk_text,
-                    "source": doc,
+                    "source": doc_name,
                     "chunk_id": i
                 })
+        if not self.chunks:
+            self.embeddings = []
+            self.retrieval_system = None
+            return
 
         # Create embeddings
         chunk_texts_for_embedding = [c["text"] for c in self.chunks]
@@ -47,7 +68,17 @@ class RAGSystem:
         # Initialize retrieval system
         self.retrieval_system = RetrievalSystem(self.chunks, self.embeddings)
 
+    def set_active_documents(self, selected_doc_names: list[str]):
+        self.initialize_system(selected_doc_names)
+
     def answer_question(self, question: str) -> str:
+        # Check for loaded documents
+        if self.retrieval_system is None:
+            return (
+                "No documents are currently indexed. "
+                "Please select documents in the Documents tab and click Run."
+            )
+
         # Get question embedding
         question_embedding = self.embeddings_manager.create_embeddings([question])[0]
 
