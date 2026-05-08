@@ -152,7 +152,7 @@ class RAGCustomTkApp(ctk.CTk):
 
         try:
             self.rag.set_active_documents(selected_names)
-            messagebox.showinfo("Index Ready", f"Indexed {len(selected_names)} selected document(s).")
+            messagebox.showinfo("Document(s) Ready", f"Loaded {len(selected_names)} selected document(s).")
         except Exception as error:
             messagebox.showerror("Error", f"Failed to index selected documents:\n{error}")
 
